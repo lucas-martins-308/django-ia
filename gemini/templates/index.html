@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>meu chat</title>
+</head>
+<body>
+    <form id="form" action="{% url 'enviar_mensagem' %}" method="POST"> {% csrf_token %}
+        <h2>Bem vindo(a) a minha IA de .......</h2>
+        <textarea name="pergunta" id=""></textarea>
+        <button type="submit">Enviar</button>
+    </form>
+
+
+    <div id="mensagens">
+
+    </div>
+
+    <script>
+        let form = document.querySelector('#form')
+        let mensagens = document.querySelector('#mensagens')
+        form.addEventListener('submit', (event)=>{
+            event.preventDefault()
+
+            const formData = new FormData()
+
+            fetch(form.action,
+                {
+                    'header' : {
+                        'XCSRFToken' : formData.get('csrfmiddlewaretoken')
+                    },
+                    'method' : 'POST',
+                    'body' : formData
+                }
+            ).then((response)=>{
+                return response.json()
+            }).then((data)=>{
+                mensagens.innerHTML += data
+                return data;
+            })
+        })
+    </script>
+
+</body>
+</html>
